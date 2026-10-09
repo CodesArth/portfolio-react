@@ -314,7 +314,7 @@ function Contact() {
   return (
     <section id="contato" className="section">
       <h2>Contato</h2>
-      <p>Quer conversar sobre um projeto ou vaga? Me escreva.</p>
+      <p>Quer conversar sobre um projeto ou oportunidade? Entre em contato!</p>
       <a className="btn" href={`mailto:${profile.email}`}>{profile.email}</a>
       <ul className="social">
         {profile.links.map((l) => (
