@@ -107,17 +107,17 @@ main, .header, .footer {
   width: 7rem;
   aspect-ratio: 1;
   padding: 0.8rem;
-  background: var(--surface);
+  background: #FFFFFF;
   border: 1px solid var(--border);
   border-radius: 1rem;
   box-shadow: 0 1rem 2rem rgba(20, 33, 61, 0.16);
 }
-.company-logo { width: 100%; height: 100%; object-fit: contain; }
+.company-logo { width: 120%; height: 120%; object-fit: contain; }
 
 .btn {
   display: inline-block;
   padding: 0.75rem 1.4rem;
-  background: var(--accent);
+  background: #FFFFFF;
   color: var(--accent-text);
   border-radius: 8px;
   font-weight: 600;
@@ -140,17 +140,132 @@ main, .header, .footer {
 }
 
 /* Projetos */
-.projects { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.project-carousel {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding: 0.25rem 0.15rem 1rem;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  cursor: grab;
+}
+.project-carousel::-webkit-scrollbar { display: none; }
+.project-carousel:active { cursor: grabbing; }
 .project {
+  flex: 0 0 calc((100% - 2.5rem) / 3);
+  min-width: 0;
   display: flex; flex-direction: column; gap: 0.75rem;
   padding: 1.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
+.project:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 0.75rem 1.5rem rgba(20, 33, 61, 0.08); }
+.project-heading { display: flex; align-items: center; gap: 1rem; }
+.project-logo { flex: 0 0 4rem; width: 4rem; height: 4rem; object-fit: contain; }
+.project-heading-copy { min-width: 0; }
+.project-status { display: block; color: var(--muted); font-size: 0.85rem; line-height: 1.35; }
 .project h3 { margin: 0; font-size: 1.15rem; }
 .project p { margin: 0; color: var(--muted); }
 .project-links { display: flex; gap: 1rem; margin-top: auto; font-weight: 500; }
+.project-prompt { display: flex; justify-content: space-between; align-items: center; margin-top: auto; color: var(--accent); font-weight: 600; }
+.project-prompt span { font-size: 1.25rem; }
+
+@media (max-width: 850px) {
+  .project { flex-basis: calc((100% - 1.25rem) / 2); }
+}
+@media (max-width: 560px) {
+  .project { flex-basis: min(82vw, 22rem); }
+}
+
+.project-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(8, 13, 25, 0.76);
+  backdrop-filter: blur(6px);
+}
+.project-dialog {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.85fr);
+  width: min(100%, 62rem);
+  max-height: min(85vh, 42rem);
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.3);
+}
+.project-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.project-gallery { position: relative; display: grid; min-height: 24rem; background: var(--bg); }
+.project-image { display: block; width: 100%; height: 100%; min-height: 24rem; max-height: 42rem; border-radius: 6px; object-fit: contain; }
+.gallery-empty {
+  display: grid;
+  place-items: center;
+  min-height: 24rem;
+  padding: 2rem;
+  background: radial-gradient(ellipse at 50% 110%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 65%), var(--bg);
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  text-align: center;
+}
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.gallery-previous { left: 1rem; }
+.gallery-next { right: 1rem; }
+.gallery-count { position: absolute; right: 1rem; bottom: 1rem; padding: 0.25rem 0.6rem; border-radius: 999px; background: var(--surface); color: var(--text); font-size: 0.85rem; }
+.project-details { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; padding: clamp(1.5rem, 4vw, 3rem); }
+.project-kicker { margin: 0; color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.project-details h3 { margin: 0; font-family: var(--font-display); font-size: 1.8rem; line-height: 1.15; }
+.project-description { margin: 0; color: var(--muted); }
+.project-details .project-links { margin-top: auto; padding-top: 1rem; }
+
+@media (max-width: 700px) {
+  .project-overlay { padding: 0.75rem; }
+  .project-dialog { grid-template-columns: 1fr; max-height: 92vh; }
+  .project-gallery, .project-image, .gallery-empty { min-height: 15rem; max-height: 38vh; }
+  .project-details { gap: 0.75rem; }
+  .project-details h3 { padding-right: 2rem; }
+}
 
 /* Contato */
 #contato p { margin-top: 0; color: var(--muted); }
